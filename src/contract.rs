@@ -282,7 +282,9 @@ mod tests {
         state.withdrawal_allowed_from = env_block_time - 3;
         config(&mut deps.storage).save(&state).unwrap();
         let handle_response = handle(&mut deps, mock_env(MOCK_ADMIN, &[]), msg.clone());
-        let res = handle_response.unwrap();
-        assert_eq!(1, res.messages.len());
+        assert_eq!(
+            handle_response.unwrap_err(),
+            StdError::generic_err(format!("Error performing Balance query: Generic error: Querier system error: No such contract: {}", MOCK_ACCEPTED_TOKEN_ADDRESS)),
+        );
     }
 }
